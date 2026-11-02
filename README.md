@@ -2,6 +2,13 @@
 
 🚀 *Live Demo:* [Click Here to View Live Demo](https://ah-estate-hub.vercel.app?_vercel_share=X6ygbxYUIQSZUK1PqLpslp3EEemUoryF)
 
+### Database Seeding (For Local Testing)
+To populate sample properties into the database, run the seed script inside the server directory:
+\\\`bash
+cd server
+npm run seed
+\\\`
+
 # EstateHub — Real Estate Listing Portal
 
 A full-stack starter project for your Project 8 assignment. It includes a React frontend, Node.js/Express REST API, MongoDB models, JWT authentication, property search/filtering, favorites, saved searches, agent inquiries, and admin listing approval.
