@@ -1,3 +1,7 @@
+# AH Estate Hub - Real Estate Listing Portal
+
+🚀 *Live Demo:* [Click Here to View Live Demo](https://ah-estate-hub.vercel.app?_vercel_share=X6ygbxYUIQSZUK1PqLpslp3EEemUoryF)
+
 # EstateHub — Real Estate Listing Portal
 
 A full-stack starter project for your Project 8 assignment. It includes a React frontend, Node.js/Express REST API, MongoDB models, JWT authentication, property search/filtering, favorites, saved searches, agent inquiries, and admin listing approval.
