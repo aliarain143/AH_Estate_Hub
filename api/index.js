@@ -1,18 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
-
-dotenv.config();
 
 const app = express();
 
-app.use(express.json());
-app.use(cookieParser());
 app.use(cors());
+app.use(express.json());
 
-// Database Connection Cache for Vercel Serverless
+// Serverless Database Connection Handler
 let isConnected = false;
 
 async function connectDB() {
@@ -24,32 +19,24 @@ async function connectDB() {
   isConnected = true;
 }
 
-// Global DB Connection Middleware
-app.use(async (req, res, next) => {
+// Properties Endpoint
+const handleProperties = async (req, res) => {
   try {
     await connectDB();
-    next();
-  } catch (err) {
-    console.error("DB Connection Error:", err);
-    res.status(500).json({ error: "DB Error: " + err.message });
-  }
-});
-
-// Properties Route (Handles both /api/properties and /properties)
-const getProperties = async (req, res) => {
-  try {
     const db = mongoose.connection.db;
     const properties = await db.collection('properties').find({}).toArray();
-    res.status(200).json(properties);
+    return res.status(200).json(properties);
   } catch (err) {
-    res.status(500).json({ error: "Fetch error: " + err.message });
+    console.error("API Error:", err);
+    return res.status(500).json({ error: err.message });
   }
 };
 
-app.get('/api/properties', getProperties);
-app.get('/properties', getProperties);
+app.get('/api/properties', handleProperties);
+app.get('/properties', handleProperties);
 
-// Health Route
-app.get('/api/health', (req, res) => res.json({ status: 'OK' }));
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
 
 export default app;
