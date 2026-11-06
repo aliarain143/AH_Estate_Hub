@@ -26,8 +26,8 @@ export default function App() {
         <Route path="/register" element={<Auth mode="register" />} />
         <Route path="/favorites" element={<Protected><Favorites /></Protected>} />
         
-        {/* Admin route is now completely public and friction-free for reviewers */}
-        <Route path="/admin" element={<Admin />} />
+        {/* Admin route is now locked & protected again for admins only */}
+        <Route path="/admin" element={<Protected admin><Admin /></Protected>} />
         
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
