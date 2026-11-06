@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serverless Database Connection Handler
+// Database Connection Manager
 let isConnected = false;
 
 async function connectDB() {
@@ -19,7 +19,7 @@ async function connectDB() {
   isConnected = true;
 }
 
-// Properties Endpoint
+// API Handler
 const handleProperties = async (req, res) => {
   try {
     await connectDB();
@@ -32,6 +32,7 @@ const handleProperties = async (req, res) => {
   }
 };
 
+// API Endpoints
 app.get('/api/properties', handleProperties);
 app.get('/properties', handleProperties);
 
