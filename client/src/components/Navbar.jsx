@@ -4,10 +4,6 @@ import { useAuth } from '../context/AuthContext';
 export default function Navbar() {
   const { user, logout } = useAuth();
   
-  // Apni email check ya admin role check
-  const ADMIN_EMAIL = "aliarainah6@gmail.com";
-  const isAdmin = user?.role === 'admin' || user?.email === ADMIN_EMAIL;
-
   return (
     <header className="navbar">
       <Link to="/" className="brand">
@@ -16,7 +12,11 @@ export default function Navbar() {
       <nav>
         <NavLink to="/">Explore</NavLink>
         {user && <NavLink to="/favorites">Favorites</NavLink>}
-        {isAdmin && <NavLink to="/add-property">Add Property</NavLink>}
+        
+        {/* Admin Dashboard / Add Property Direct Link for Quick Review */}
+        <NavLink to="/admin" style={{ fontWeight: 'bold', color: '#166534' }}>
+          Admin Dashboard
+        </NavLink>
       </nav>
       <div className="nav-actions">
         {user ? (
