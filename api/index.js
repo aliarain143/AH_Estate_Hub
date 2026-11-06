@@ -1,46 +1,50 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import cors from 'cors';
-
-dotenv.config();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection with error catching
-let cachedDb = null;
+let isConnected = false;
 
-async function connectDB() {
-  if (cachedDb && mongoose.connection.readyState === 1) {
+async function connectToDatabase() {
+  if (isConnected && mongoose.connection.readyState === 1) {
     return;
   }
   if (!process.env.MONGO_URI) {
     throw new Error("MONGO_URI environment variable is missing!");
   }
   await mongoose.connect(process.env.MONGO_URI);
-  cachedDb = mongoose.connection;
-  console.log("MongoDB connected successfully");
+  isConnected = true;
 }
 
-// Simple test route to verify API is working
-app.get('/api/properties', async (req, res) => {
+// Global DB middleware
+app.use(async (req, res, next) => {
   try {
-    await connectDB();
-    // Direct mongoose query or mock data to test if DB works
-    const db = mongoose.connection.db;
-    const properties = await db.collection('properties').find({}).toArray();
-    res.json(properties);
+    await connectToDatabase();
+    next();
   } catch (err) {
-    console.error("API Error:", err);
-    res.status(500).json({ error: err.message });
+    console.error("DB Connection Error:", err);
+    res.status(500).json({ error: "Database Connection Failed: " + err.message });
   }
 });
 
+// Properties Route
+app.get('/api/properties', async (req, res) => {
+  try {
+    const db = mongoose.connection.db;
+    const properties = await db.collection('properties').find({}).toArray();
+    res.status(200).json(properties);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch properties: " + err.message });
+  }
+});
+
+// Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'API is running live on Vercel!' });
+  res.status(200).json({ status: 'OK', message: 'Backend is working!' });
 });
 
 export default app;
